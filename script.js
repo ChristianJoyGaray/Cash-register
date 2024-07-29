@@ -41,9 +41,9 @@ const calculateChange = () => {
     let userChange = userInputs - price;
     let changeArr = [];
     let updatedCid = JSON.parse(JSON.stringify(cid)); // create copy of cid
-    let totalCid = cid.reduce((total, currency) => total + currency[1], 0);
+    let totalCid = cid.reduce((total, currency) => total + currency[1], 0); // Calculate total cash in drawer
 
-    if (totalCid < userChange) {
+    if (totalCid < userChange) { // Check for insufficient funds
         change.textContent = "Status: INSUFFICIENT_FUNDS";
         return;
     }
@@ -66,20 +66,20 @@ const calculateChange = () => {
         }
     }
 
-    if (userChange > 0) {
+    if (userChange > 0) { // Check if change cannot be given exactly
         change.textContent = "Status: INSUFFICIENT_FUNDS";
         return;
     }
 
-    let remainingCid = updatedCid.reduce((total, currency) => total + currency[1], 0);
+    let remainingCid = updatedCid.reduce((total, currency) => total + currency[1], 0); // Calculate remaining cash in drawer
 
-    if (remainingCid === 0) {
+    if (remainingCid <= 0) { // Determine if the status should be CLOSED
         let changeText = "Status: CLOSED";
         changeArr.forEach(([name, amount]) => {
             changeText += ` ${name}: $${amount.toFixed(2)}`;
         });
         change.textContent = changeText;
-    } else {
+    } else { // Determine if the status should be OPEN
         let changeText = "Status: OPEN";
         changeArr.forEach(([name, amount]) => {
             changeText += ` ${name}: $${amount.toFixed(2)}`;
